@@ -1,5 +1,8 @@
 import os
 import time
+### Parts of this program were inspired by Nicholas Swift,
+### https://medium.com/@nicholas.w.swift/easy-a-star-pathfinding-7e6689c7f7b2
+
 
 class Node:
     def __init__(self, _position=None, _previous=None):
@@ -67,7 +70,38 @@ def main():
     currentNode = maze.start
     currentIndex = 0
     openList.append(currentNode)
+    solutionFlag = False
     while (openList):
+        for index, node in enumerate(openList):
+            if (node.c < currentNode.c):
+                currentNode = node
+                currentIndex = index
+        #if path done
+        if (currentNode == maze.end):
+            closedList.append(currentNode)
+        else:
+            #pop returns the object at the index, append it to the closed list
+            closedList.append(openList.pop(currentIndex))
+            findAdjacent(currentNode)
+
+def findAdjacent(_node, _maze):
+    for newPos in [(0, -1), (0, 1), (-1, 0), (1, 0), (-1, -1), (-1, 1), (1, -1), (1, 1)]: # Adjacent squares
+        #Generate new node
+        newNode = Node((currentNode.position[0] + newPos[0], currentNode.position[1] + newPos[1]), currentNode.position)
+        #check if not in bounds
+        if (not (newNode.position[0] >= 0 and newNode.position[0] < _maze.sizeY and newNode.position[1] >= 0 and newNode.position[1] < _maze.sizeX)):
+            continue
+        #check if not 1
+        if (maze[newNode.position[0]][newNode.position[1]] == 1):
+            continue
+
+
+        
+
+
+
+
+
 
 
 if __name__ == '__main__':
