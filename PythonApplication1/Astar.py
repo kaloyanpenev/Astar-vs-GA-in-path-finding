@@ -76,20 +76,6 @@ class Maze:
 
 
 
-def main():
-    with open("terrain3.txt") as terrain:
-        terrain = terrain.read()
-    terrain = terrain.split(" ")
-    sizeX = terrain[0]
-    sizeY = terrain[1]
-    del terrain[0:2]
-    maze = Maze(sizeY, sizeX, terrain)
-    printProgress = True
-    startTime = time.time()
-    AstarSearch(maze, printProgress)
-    print("Elapsed time:", time.time() - startTime, "\n")
-
-
 def AstarSearch(maze, _print):
 
     openList = []
@@ -181,6 +167,25 @@ def optimizePath(_currentNode, _displayMaze, _print):
     #we optimize from the end to the start
     #so need to return reversed path
     return solutionPath[::-1]
+
+
+def main():
+    mapTerrain = input("Enter maze file(in UTF8 txt format) to be used: ")
+    printString = input("Print progress?(y/n): ")
+    if (printString == "y"):
+        printProgress = True
+    else:
+        printProgress = False
+    with open(mapTerrain) as terrain:
+        terrain = terrain.read()
+    terrain = terrain.split(" ")
+    sizeX = terrain[0]
+    sizeY = terrain[1]
+    del terrain[0:2]
+    maze = Maze(sizeY, sizeX, terrain)
+    startTime = time.time()
+    AstarSearch(maze, printProgress)
+    print("Elapsed time:", time.time() - startTime, "\n")
 
 if __name__ == '__main__':
     main()
