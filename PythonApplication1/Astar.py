@@ -3,6 +3,7 @@ import random
 import string
 import time
 import math
+import sys
 
 ### Parts of the code for the A* algorithm were inspired by Nicholas Swift,
 ### https://medium.com/@nicholas.w.swift/easy-a-star-pathfinding-7e6689c7f7b2
@@ -465,6 +466,8 @@ def main():
     else:
         print("invalid selection of algorithm, please type in '1' or '2' ")
     print("Elapsed time:", time.time() - startTime, "\n")
+    print("See you next time.")
+    endinput = input("")
 
 if __name__ == '__main__':
     main()
