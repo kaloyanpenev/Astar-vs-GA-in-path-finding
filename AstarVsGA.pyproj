@@ -5,12 +5,12 @@
     <ProjectGuid>36f11c2d-2d5d-4d00-86ec-8026001b56d3</ProjectGuid>
     <ProjectHome>
     </ProjectHome>
-    <StartupFile>Astar.py</StartupFile>
+    <StartupFile>AstarVsGA.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>Astar</Name>
+    <Name>AstarVsGA</Name>
     <RootNamespace>PythonApplication1</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -22,7 +22,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Astar.py" />
+    <Compile Include="AstarVsGA.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

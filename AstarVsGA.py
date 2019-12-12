@@ -75,34 +75,15 @@ class Maze:
                 if (self.maze[j][i] == 3):
                     self.end = Node((j, i), None)
 
-def SelectRandomChromosome(_fitnessArray):
-    """
-    Selects and returns a random chromosome from a fitness array
-    Using roulette wheel method
-    roulette = % of the chromosome to be chosen
-    fitnessArray = array of fitness values of chromosomes(in %)
-    """
-
-    #add up all fitness values(should originally = 100)
-    _fitnessArray_sum = sum(_fitnessArray)
-    rouletteRoll = random.random() * 100
-    for i in range(len(_fitnessArray)):
-        #use proportion of total
-        if (rouletteRoll >= (100 - _fitnessArray_sum) and rouletteRoll < (100 - _fitnessArray_sum + _fitnessArray[i])):
-            return i
-        #subtract current fitness from the sum to offset the proportion calculation
-        _fitnessArray_sum -= _fitnessArray[i]
-    return print("Failed to select a chromosome, function SelectRandomChromosome")
-
 def AstarSearch(maze, _print):
     """
     Implements A* Path-finding algorithm in Chebyshev space.
     Goes through a 2D binary grid terrain map and finds the optimal path
+    **Returns timestamp from the start of the algorithm.
     maze = maze Object
     print = bool for printing progress(for time benchmarks)
     """
-
-
+    startTime = time.time()
     openList = []
     closedList = []
 
@@ -136,7 +117,7 @@ def AstarSearch(maze, _print):
             solution = optimizePath(currentNode, displayMaze, _print)
             print("\nstart:", maze.start.position, "\nend:", maze.end.position, "\nTotal Search area:", ' '.join(map(str, searchArea)), "\n")
             print("path optimized:", ' '.join(map(str, solution)), "\n")
-            return
+            return startTime
         else:
             #pop returns the object at the index, append it to the closed list
             closedList.append(openList.pop(currentIndex))
@@ -203,10 +184,31 @@ def optimizePath(_currentNode, _displayMaze, _print):
     #so need to return reversed path
     return solutionPath[::-1]
 
+def SelectRandomChromosome(_fitnessArray):
+    """
+    Selects and returns a random chromosome from a fitness array
+    Using roulette wheel method
+    roulette = % of the chromosome to be chosen
+    fitnessArray = array of fitness values of chromosomes(in %)
+    """
+
+    #add up all fitness values(should originally = 100)
+    _fitnessArray_sum = sum(_fitnessArray)
+    rouletteRoll = random.random() * 100
+    for i in range(len(_fitnessArray)):
+        #use proportion of total
+        if (rouletteRoll >= (100 - _fitnessArray_sum) and rouletteRoll < (100 - _fitnessArray_sum + _fitnessArray[i])):
+            return i
+        #subtract current fitness from the sum to offset the proportion calculation
+        _fitnessArray_sum -= _fitnessArray[i]
+    return print("Failed to select a chromosome, function SelectRandomChromosome")
+
+
 def GeneticAlgorithmSearch(maze, _print):
     """
     Implements Genetic Algorithm in Manhattan space
     An individual is a 16bit string of 0 and 1
+    **Returns timestamp from the start of the algorithm.
     Moves are represented binary  as:
     # 00 - up
     # 11 - down
@@ -219,6 +221,7 @@ def GeneticAlgorithmSearch(maze, _print):
     """
     chromosomeLength = int(input("Enter number of moves:")) * 2
     chromosomeCount = int(input("Enter number of individuals in the genetic pool:"))
+    startTime = time.time()
     #generate chromosomes
     chromosome = [[round(random.random()) for i in range(chromosomeLength)] for j in range(chromosomeCount)]
     
@@ -361,13 +364,14 @@ def GeneticAlgorithmSearch(maze, _print):
         chromosome = offspringChromosome
         generation += 1
 
-        #if the fitness doesn't change in a decent amount of generations,
+        #if the fitness doesn't change in a reasonable amount of generations,
         #the chromosome pool is likely to be filled with parents optimized to a local optimum instead of the global maximum, 
         #so we reset the chromosome pool
 
 
         #reset threshold is half the total amount of bi-crossover possibilities in the current set,
         #using the combination formula: nCr = n! / (r! * (n-r)!)
+        #this is this high because we intend to use the genetic algorithm to solve this maze, not random generation
         resetThreshold = math.factorial(chromosomeCount) / (math.factorial(2) * math.factorial(chromosomeCount-2))
         resetThreshold /= 2
         if (generation%resetThreshold == 0):
@@ -437,7 +441,9 @@ def GeneticAlgorithmSearch(maze, _print):
                     Xcurrent += 1
                 else:
                     maze.maze[Ycurrent][Xcurrent] = 4
-        print("Solved!\n" +'\n'.join(map(str, maze.maze)), "\nSolution chromosome:", solution, "\nGeneration count:", generation)
+        print('\n'.join(map(str, maze.maze)))
+    print("Solved!\n" , "\nSolution chromosome:", solution, "\nGeneration count:", generation)
+    return startTime
 
 
 
@@ -458,14 +464,13 @@ def main():
     sizeY = terrain[1]
     del terrain[0:2]
     maze = Maze(sizeY, sizeX, terrain)
-    startTime = time.time()
     if (algorithm == 1):
-        AstarSearch(maze, printProgress)
+        startTime = AstarSearch(maze, printProgress)
     elif (algorithm == 2):
-        GeneticAlgorithmSearch(maze, printProgress)
+        startTime = GeneticAlgorithmSearch(maze, printProgress)
     else:
         print("invalid selection of algorithm, please type in '1' or '2' ")
-    print("Elapsed time:", time.time() - startTime, "\n")
+    print("Elapsed time:", time.time() - startTime, "seconds\n")
     print("See you next time.")
     endinput = input("")
 
